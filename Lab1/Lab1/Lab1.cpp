@@ -8,9 +8,9 @@
 GLfloat vertices[] =
 {
 	//pos			
-	0.f,  0.5f,
-	-0.5f, -0.5f,
-	0.5f,  -0.5f
+	-0.5f, -0.5f, 0.0f,
+	0.5f, -0.5f, 0.0f,
+	0.0f, 0.5f, 0.0f
 };
 
 //Shaders are dynamically compiled at run time
@@ -98,12 +98,24 @@ int main()
 
 	glUseProgram(program);
 
+	
 	glGenVertexArrays(NUM_VAOS, VAOs);
+	// bind vertex attribute objects
 	glBindVertexArray(VAOs[0]);
+	// copy the vertices arrayinto a buffer that OpenGL can use 
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
 
-
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	// set the vertex attribite pointers
+	/*
+	params:
+	1: the vertex attribute to apply the configuration to
+	2: the size of the vertex attribute
+	3: the type of data 
+	4: whether the data should be normalized
+	5: the stride of the vertex buffer (3 floats = 12)
+	6: the offset of the start of the data in the vertex buffer
+	*/
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0); 
 	glEnableVertexAttribArray(0);
 
 	/*Render loop*/
@@ -118,7 +130,7 @@ int main()
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 
 		glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3);//draws primative, 1: primative type, 2: start index, 3: number of vertices to draw
 
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
