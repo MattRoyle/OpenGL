@@ -5,13 +5,18 @@
 #include <GLFW/glfw3.h>
 
 
-GLfloat vertices[] =
-{
-	//pos			
-	-0.5f, -0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
+GLfloat vertices[] = {
+	0.5f, 0.5f, 0.0f, // top right
+	0.5f, -0.5f, 0.0f, // bottom right
+	-0.5f, -0.5f, 0.0f, // bottom left
+	-0.5f, 0.5f, 0.0f // top left
 };
+
+GLuint indices[] = {
+	0, 1, 3, // first triangle
+	1, 2, 3 // second triangle
+};
+
 
 //Shaders are dynamically compiled at run time
 
@@ -36,9 +41,10 @@ const char* fragmentShaderSource =
 
 #define NUM_BUFFERS 1
 #define NUM_VAOS 1
+#define NUM_EBOS 1
 GLuint Buffers[NUM_BUFFERS];
 GLuint VAOs[NUM_VAOS];
-
+GLuint EBOs[NUM_EBOS];
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -97,25 +103,30 @@ int main()
 	glDeleteShader(fragmentShader);
 
 	glUseProgram(program);
-
 	
+	//create the VAO (Vertex Attribute Object)
 	glGenVertexArrays(NUM_VAOS, VAOs);
 	// bind vertex attribute objects
 	glBindVertexArray(VAOs[0]);
 	// copy the vertices arrayinto a buffer that OpenGL can use 
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
+	
+	//Create the EBOs (Element Buffer Objects)
+	glGenBuffers(NUM_EBOS, EBOs);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[0]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// set the vertex attribite pointers
-	/*
-	params:
-	1: the vertex attribute to apply the configuration to
-	2: the size of the vertex attribute
-	3: the type of data 
-	4: whether the data should be normalized
-	5: the stride of the vertex buffer (3 floats = 12)
-	6: the offset of the start of the data in the vertex buffer
-	*/
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0); 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//params:
+	//1: the vertex attribute to apply the configuration to
+	//2: the size of the vertex attribute
+	//3: the type of data 
+	//4: whether the data should be normalized
+	//5: the stride of the vertex buffer (3 floats = 12)
+	//6: the offset of the start of the data in the vertex buffer
+	
 	glEnableVertexAttribArray(0);
 
 	/*Render loop*/
@@ -130,7 +141,7 @@ int main()
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 
 		glBindVertexArray(VAOs[0]);
-		glDrawArrays(GL_TRIANGLES, 0, 3);//draws primative, 1: primative type, 2: start index, 3: number of vertices to draw
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);//draws multiple primatives, 1: primative type, 2: start index, 3: number of vertices to draw
 
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
@@ -151,4 +162,8 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)// exit when esc is pressed
 		glfwSetWindowShouldClose(window, true);
+	else if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
