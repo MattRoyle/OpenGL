@@ -4,42 +4,18 @@
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.h"
 
 GLfloat vertices[] = {
-	0.5f, 0.5f, 0.0f, // top right
-	0.5f, -0.5f, 0.0f, // bottom right
-	-0.5f, -0.5f, 0.0f, // bottom left
-	-0.5f, 0.5f, 0.0f // top left
-};
+	// positions // colors
+	0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
+	-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+	0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top
+};// triangle with red, green and blue corners
 
 GLuint indices[] = {
 	0, 1, 3, // first triangle
-	1, 2, 3 // second triangle
 };
-
-
-//Shaders are dynamically compiled at run time
-
-//process the input vertices into triangles
-const char* vertexShaderSource =
-"#version 450 core\n"
-"layout(location = 0) in vec3 aPos; // position has attribute position 0\n"
-"out vec4 vertexColor; // specify a color output to the fragment shader\n"
-"void main()\n"
-"{\n"
-"	gl_Position = vec4(aPos, 1.0); // we give a vec3 to vec4’s constructor\n"
-"	vertexColor = vec4(0.5, 0.0, 0.0, 1.0); // output variable to dark-red\n"
-"}\n";//GLSL (OpenGL Shading Language), in vertex shaders each variable is known as a vertex attribute
-
-// process the pixel colour of the triangles
-const char* fragmentShaderSource =
-"#version 450 core\n"
-"out vec4 FragColor;\n"
-"uniform vec4 ourColor; // we set this variable in the OpenGL code.\n"
-"void main()\n"
-"{\n"
-"	FragColor = ourColor;\n"
-"}\n";
 
 
 #define NUM_BUFFERS 1
@@ -53,7 +29,8 @@ void processInput(GLFWwindow* window);
 
 int main()
 {
-	
+	const char* vertexShaderSource = load_shader("vertex.shader");
+	const char* fragmentShaderSource = load_shader("fragment.shader");
 	/*----------Window creation----------*/
 	glfwInit();
 
@@ -120,30 +97,25 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	
-	
-	//Create the EBOs (Element Buffer Objects)
-	glGenBuffers(NUM_EBOS, EBOs);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[0]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// set the vertex attribite pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);//params:
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);//params:
 	//1: the vertex attribute to apply the configuration to
 	//2: the size of the vertex attribute
 	//3: the type of data 
 	//4: whether the data should be normalized
-	//5: the stride of the vertex buffer (3 floats = 12)
+	//5: the stride of the vertex buffer (6 floats = 24)
 	//6: the offset of the start of the data in the vertex buffer
 	
 	glEnableVertexAttribArray(0);
 
+	//colour attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
 	{
-		GLdouble timeValue = glfwGetTime();
-		GLfloat greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
-		GLint vertexColorLocation = glGetUniformLocation(program, "ourColor");
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		//Input
 		processInput(window);
 
@@ -153,7 +125,7 @@ int main()
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 
 		glBindVertexArray(VAOs[0]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);//draws multiple primatives, 1: primative type, 2: start index, 3: number of vertices to draw
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
