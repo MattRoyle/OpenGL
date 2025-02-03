@@ -22,20 +22,23 @@ GLuint indices[] = {
 
 //process the input vertices into triangles
 const char* vertexShaderSource =
-"#version 450 core\n"//the version of openGL (4.5)
-"layout(location = 0) in vec4 vaPos;\n"
+"#version 450 core\n"
+"layout(location = 0) in vec3 aPos; // position has attribute position 0\n"
+"out vec4 vertexColor; // specify a color output to the fragment shader\n"
 "void main()\n"
 "{\n"
-"	gl_Position = vaPos;\n"
-"}\n";//GLSL (OpenGL Shading Language)
+"	gl_Position = vec4(aPos, 1.0); // we give a vec3 to vec4’s constructor\n"
+"	vertexColor = vec4(0.5, 0.0, 0.0, 1.0); // output variable to dark-red\n"
+"}\n";//GLSL (OpenGL Shading Language), in vertex shaders each variable is known as a vertex attribute
 
 // process the pixel colour of the triangles
 const char* fragmentShaderSource =
 "#version 450 core\n"
-"layout(location = 0) out vec4 fColour;\n"
+"out vec4 FragColor;\n"
+"uniform vec4 ourColor; // we set this variable in the OpenGL code.\n"
 "void main()\n"
 "{\n"
-"	fColour = vec4(1.0f, 0.5f, 0.f, 1.0f);\n"
+"	FragColor = ourColor;\n"
 "}\n";
 
 
@@ -45,11 +48,12 @@ const char* fragmentShaderSource =
 GLuint Buffers[NUM_BUFFERS];
 GLuint VAOs[NUM_VAOS];
 GLuint EBOs[NUM_EBOS];
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
 void processInput(GLFWwindow* window);
 
 int main()
 {
+	
 	/*----------Window creation----------*/
 	glfwInit();
 
@@ -60,14 +64,17 @@ int main()
 
 	glCreateBuffers(NUM_BUFFERS, Buffers);
 	glNamedBufferStorage(Buffers[0], sizeof(vertices), vertices, 0);
-
+	
+	int nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum num of vertex attributes supported: " << nrAttributes << std::endl;
 	/*----------Vertex shader----------*/
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);// call gl to create a shader returning the ID of the vertex 
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);// call gl to create a shader returning the ID of the vertex 
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // attatch the shader passing in the program as a string, the 4th param is optional a buffer to store the returned compiled code
 	glCompileShader(vertexShader);
 
-	int success;
-	char infoLog[512];
+	GLint success;
+	GLchar infoLog[512];
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 	if (!success) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
@@ -75,7 +82,7 @@ int main()
 	}
 
 	/*---------- fragment shader----------*/
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 
@@ -88,7 +95,7 @@ int main()
 	/*----------Shader Program-----------*/
 	//link the compiled shaders as a single object
 	//output of one shader is the input of the next
-	unsigned int program = glCreateProgram();
+	GLuint program = glCreateProgram();
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
 	glLinkProgram(program);
@@ -103,6 +110,7 @@ int main()
 	glDeleteShader(fragmentShader);
 
 	glUseProgram(program);
+
 	
 	//create the VAO (Vertex Attribute Object)
 	glGenVertexArrays(NUM_VAOS, VAOs);
@@ -132,6 +140,10 @@ int main()
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
 	{
+		GLdouble timeValue = glfwGetTime();
+		GLfloat greenValue = static_cast<float>(sin(timeValue) / 2.0 + 0.5);
+		GLint vertexColorLocation = glGetUniformLocation(program, "ourColor");
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		//Input
 		processInput(window);
 
@@ -152,7 +164,7 @@ int main()
 }
 
 /*GLFW change window size*/
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height)
 {
 	glViewport(0, 0, width, height);
 }
