@@ -14,11 +14,43 @@
 #include <glm/gtc/type_ptr.hpp>
 
 GLfloat vertices[] = {
-	// positions	 // texture coords
-	0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-	0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+	// positions			// texture coords
+	-0.5f, -0.5f, -0.5f,	 0.0f, 0.0f,
+	0.5f, -0.5f, -0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
+	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
+	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,
+	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
+	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 1.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 1.0f,
+	-0.5f, 0.5f, 0.5f,		0.0f, 1.0f,
+	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
+	-0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
+	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
+	-0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,		0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,		0.0f, 1.0f,
+	0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
+	0.5f, -0.5f, -0.5f,		1.0f, 1.0f,
+	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
+	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
+	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
+	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f,
+	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
+	-0.5f, 0.5f, 0.5f,		0.0f, 0.0f,
+	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f
 };
 
 GLuint indices[] = {
@@ -127,21 +159,23 @@ int main()
 	}
 	stbi_image_free(data);
 	glUseProgram(shaderProgram.programID);
-
+	glEnable(GL_DEPTH_TEST);
 	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture1"), 0);
 	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture2"), 1);
 	glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(-55.0f),
-		glm::vec3(1.0f, 0.0f, 0.0f));
-
-	glm::mat4 view = glm::mat4(1.0f); // note that we’re translating the scene in the reverse direction 
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f),
-		800.0f / 600.0f, 0.1f, 100.0f);
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),
+		glm::vec3(-1.3f, 1.0f, -1.5f)
+	};
 
 	static const GLfloat bgd[] = { 0.46f, 0.48f, 0.71f, 1.f };
 	/*Render loop*/
@@ -152,18 +186,25 @@ int main()
 
 		// Rendering
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
-		
+		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
-		
-		// Coordinate Space Matrices
-		int modelLoc = glGetUniformLocation(shaderProgram.programID, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
+		// Coordinate Space Matrices
+		// Initialise as identity matrices
+
+		glm::mat4 view = glm::mat4(1.0f); // note that we’re translating the scene in the reverse direction 
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+		glm::mat4 projection;
+		projection = glm::perspective(glm::radians(45.0f),
+			800.0f / 600.0f, 0.1f, 100.0f);
+
+		//Apply to the uniforms
 		int viewLoc = glGetUniformLocation(shaderProgram.programID, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
@@ -172,7 +213,17 @@ int main()
 		
 		//Drawing the triangles
 		glBindVertexArray(VAOs[0]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (unsigned int i = 0; i < 10; i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0 * i;
+			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle),
+				glm::vec3(0.5f, 1.0f, 0.0f));
+			int modelLoc = glGetUniformLocation(shaderProgram.programID, "model");
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		
 
 		
 		//swapping buffers and polling events
