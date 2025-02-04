@@ -8,12 +8,17 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+// GLM (OpenGL Mathematics) https://github.com/g-truc/glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 GLfloat vertices[] = {
-	// positions // colors // texture coords
-	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-	0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-	-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
+	// positions	 // texture coords
+	0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+	0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
 };
 
 GLuint indices[] = {
@@ -63,18 +68,14 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
 	//create the VAO (Vertex Attribute Object)
-
+	
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	//colour attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)));
-	glEnableVertexAttribArray(1);
-
 	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	/*------Textures-----------*/
 	unsigned int texture1, texture2;
@@ -131,10 +132,16 @@ int main()
 	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture2"), 1);
 	glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 
-	static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
+	
+
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
 	{
+		static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+		transform = glm::rotate(transform, (float)glfwGetTime(),
+			glm::vec3(0.0f, 1.0f, 0.0f));
 		//Input
 		processInput(window);
 
@@ -148,6 +155,7 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 		glUseProgram(shaderProgram.programID);
 		glBindVertexArray(VAOs[0]);
 
