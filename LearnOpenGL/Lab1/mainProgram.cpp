@@ -68,9 +68,25 @@ GLuint VBOs[NUM_BUFFERS];
 GLuint VAOs[NUM_VAOS];
 GLuint EBOs[NUM_EBOS];
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
 void processInput(GLFWwindow* window);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+
+// Scene Global Variables
+float deltaTime = 0.0f; // Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
+float lastX = DISPLAY_W/2, lastY = DISPLAY_H / 2; //position of the mouse on the previous update, intialised to the center
+float yaw = -90.0f, pitch = 0.0f;
+bool firstMouse = true;
+float fov = 0.785f;
+
 GLfloat mixValue = 0.2f;
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 int main()
 {
 	/*----------Window creation----------*/
@@ -78,9 +94,13 @@ int main()
 
 	GLFWwindow* window = glfwCreateWindow(DISPLAY_W, DISPLAY_H, "Learn OpenGL", NULL, NULL);
 	glfwMakeContextCurrent(window);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);// attatch the resize function callback
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	gl3wInit();
 
+	
 
 	// Create the program
 	ShaderProgram shaderProgram("vertex.shader", "fragment.shader");
@@ -180,6 +200,9 @@ int main()
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 		//Input
 		processInput(window);
 
@@ -200,12 +223,11 @@ int main()
 		float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
 		glm::mat4 view;
-		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0),
-			glm::vec3(0.0, 1.0, 0.0));
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		glfwGetWindowSize(window, &width, &height);
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f),
+		projection = glm::perspective(fov,
 			(float)width / (float)height, 0.1f, 100.0f);
 
 		//Apply to the uniforms
@@ -237,11 +259,47 @@ int main()
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	fov -= (float)yoffset/57.3;
+	if (fov < 0.0175f)
+		fov = 0.0175f;
+	if (fov >0.785f)
+		fov = 0.785f;
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse){//prevent jumpyness
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false; 
+	}
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+	float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+	yaw += xoffset;
+	pitch += yoffset;
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
+}
 
 /*GLFW change window size*/
 void framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height)
 {
 	glViewport(0, 0, width, height);
+	firstMouse = true;
 }
 
 /*Process inputs by querying the appropiate keys*/
@@ -249,20 +307,33 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)// exit when esc is pressed
 		glfwSetWindowShouldClose(window, true);
-	else if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
+	
+	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	else if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+	
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		mixValue += 0.0001f;
 		if (mixValue >= 1.0f) {
-			mixValue == 1.0f;
+			mixValue = 1.0f;
 		}
 	}
 	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		mixValue -= 0.0001f;
 		if (mixValue <= 0.0f) {
-			mixValue == 0.0f;
+			mixValue = 0.0f;
 		}
 	}
+
+	float cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
 }
