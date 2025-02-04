@@ -132,19 +132,25 @@ int main()
 	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture2"), 1);
 	glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 
-	
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f));
 
+	glm::mat4 view = glm::mat4(1.0f); // note that we’re translating the scene in the reverse direction 
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.0f),
+		800.0f / 600.0f, 0.1f, 100.0f);
+
+	static const GLfloat bgd[] = { 0.46f, 0.48f, 0.71f, 1.f };
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
 	{
-		static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
-		
-		
 		//Input
 		processInput(window);
 
-		// rendering commands
-		
+		// Rendering
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 		
 		glActiveTexture(GL_TEXTURE0);
@@ -154,23 +160,21 @@ int main()
 
 		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 		
-		// first transform
-		glm::mat4 transform = glm::mat4(1.0f);
-		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+		// Coordinate Space Matrices
+		int modelLoc = glGetUniformLocation(shaderProgram.programID, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+		int viewLoc = glGetUniformLocation(shaderProgram.programID, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+		int projectionLoc = glGetUniformLocation(shaderProgram.programID, "projection");
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		
+		//Drawing the triangles
 		glBindVertexArray(VAOs[0]);
-
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		transform = glm::mat4(1.0f);
-		transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
-		float scaleValue = static_cast<float>(sin(glfwGetTime()));
-		transform = glm::scale(transform, glm::vec3(scaleValue, scaleValue, scaleValue));
 		
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, &transform[0][0]);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
 		glfwPollEvents(); //checks for inputs (mouse, keyboard)
