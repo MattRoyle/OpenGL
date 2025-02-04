@@ -118,9 +118,9 @@ int main()
 	glEnableVertexAttribArray(2);
 
 	/*------Textures-----------*/
-	unsigned int texture;
-	glGenTextures(1, &texture);//number of textures to create
-	glBindTexture(GL_TEXTURE_2D, texture);
+	unsigned int texture1, texture2;
+	glGenTextures(1, &texture1);//number of textures to create
+	glBindTexture(GL_TEXTURE_2D, texture1);
 
 	//set the wrapping
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -131,6 +131,7 @@ int main()
 
 	//load the image
 	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
 	//generate the texture
 	if (data) {
@@ -138,12 +139,37 @@ int main()
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else {
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture1" << std::endl;
 		exit(1);
 	}
 	stbi_image_free(data);
+	data = nullptr;
+	glGenTextures(1, &texture2);//number of textures to create
+	glBindTexture(GL_TEXTURE_2D, texture2);
 
+	//set the wrapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set the texture filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA,
+			GL_UNSIGNED_BYTE, data);//alpha channel included
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture2" << std::endl;
+		exit(1);
+	}
+	stbi_image_free(data);
 	glUseProgram(program);
+
+	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
+	glUniform1i(glGetUniformLocation(program, "texture2"), 1);
 
 	static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
 	/*Render loop*/
@@ -156,8 +182,12 @@ int main()
 		
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 		
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
 
+		glUseProgram(program);
 		glBindVertexArray(VAOs[0]);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

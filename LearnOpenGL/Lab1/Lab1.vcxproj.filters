@@ -38,9 +38,4 @@
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="smile.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
-  </ItemGroup>
 </Project>
