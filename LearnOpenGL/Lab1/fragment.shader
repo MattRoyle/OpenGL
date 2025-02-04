@@ -1,1 +1,1 @@
-#version 450 coreout vec4 FragColour;in vec3 ourColour; // we set this variable in the OpenGL codevoid main(){	FragColour = vec4(ourColour, 1.0f);};
+#version 450 coreout vec4 FragColour;in vec3 ourColour; // we set this variable in the OpenGL codein vec2 TexCoord;uniform sampler2D ourTexture;//GLSL built in datatype for texturevoid main(){	FragColour = texture(ourTexture, TexCoord);}

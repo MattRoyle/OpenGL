@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 
+#include <cstdlib>
 
 const char* load_shader(const char* shaderPath) {
 	// 1. retrieve the vertex/fragment source code from filePath
@@ -38,5 +39,6 @@ const char* load_shader(const char* shaderPath) {
 	}
 	return (char *)'\0';
 }
+
 
 #endif
