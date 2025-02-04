@@ -46,49 +46,8 @@ int main()
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
 	std::cout << "Maximum num of vertex attributes supported: " << nrAttributes << std::endl;
 
-	/*----------Shaders----------*/
-	
-	GLint success;
-	GLchar infoLog[512];
-	
-	const char* vertexShaderSource = load_shader("vertex.shader");
-	const char* fragmentShaderSource = load_shader("fragment.shader");
-	
-	// Vertex Shader
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);// call gl to create a shader returning the ID of the vertex 
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL); // attatch the shader passing in the program as a string, the 4th param is optional a buffer to store the returned compiled code
-	glCompileShader(vertexShader);
-
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR:Vertex Shader failed to compile\n" << infoLog << std::endl;
-	}
-
-	// Fragment Shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR:Fragment Shader failed to compile\n" << infoLog << std::endl;
-	}
-
-	// Shader Program
-	GLuint program = glCreateProgram();
-	glAttachShader(program, vertexShader);
-	glAttachShader(program, fragmentShader);
-	glLinkProgram(program);
-
-	glGetProgramiv(program, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(program, 512, NULL, infoLog);
-		std::cout << "ERROR:programr failed to link\n" << infoLog << std::endl;
-	}
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	// Create the program
+	ShaderProgram shaderProgram("vertex.shader", "fragment.shader");
 
 	// Set up vertex data and Buffers
 	glGenVertexArrays(NUM_VAOS, VAOs);
@@ -166,11 +125,11 @@ int main()
 		exit(1);
 	}
 	stbi_image_free(data);
-	glUseProgram(program);
+	glUseProgram(shaderProgram.programID);
 
-	glUniform1i(glGetUniformLocation(program, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(program, "texture2"), 1);
-	glUniform1f(glGetUniformLocation(program, "mixValue"), mixValue);
+	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture1"), 0);
+	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture2"), 1);
+	glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 
 	static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
 	/*Render loop*/
@@ -188,8 +147,8 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
-		glUniform1f(glGetUniformLocation(program, "mixValue"), mixValue);
-		glUseProgram(program);
+		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
+		glUseProgram(shaderProgram.programID);
 		glBindVertexArray(VAOs[0]);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
