@@ -58,6 +58,8 @@ GLuint indices[] = {
 	1, 2, 3  // second triangle
 };
 
+#define DISPLAY_W 640
+#define DISPLAY_H 480
 
 #define NUM_BUFFERS 1
 #define NUM_VAOS 1
@@ -74,14 +76,11 @@ int main()
 	/*----------Window creation----------*/
 	glfwInit();
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "A Triangle", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(DISPLAY_W, DISPLAY_H, "Learn OpenGL", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);// attatch the resize function callback
 	gl3wInit();
 
-	int nrAttributes;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	std::cout << "Maximum num of vertex attributes supported: " << nrAttributes << std::endl;
 
 	// Create the program
 	ShaderProgram shaderProgram("vertex.shader", "fragment.shader");
@@ -197,12 +196,17 @@ int main()
 		// Coordinate Space Matrices
 		// Initialise as identity matrices
 
-		glm::mat4 view = glm::mat4(1.0f); // note that we’re translating the scene in the reverse direction 
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		const float radius = 10.0f;
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
+		glm::mat4 view;
+		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0),
+			glm::vec3(0.0, 1.0, 0.0));
 
+		glfwGetWindowSize(window, &width, &height);
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(45.0f),
-			800.0f / 600.0f, 0.1f, 100.0f);
+			(float)width / (float)height, 0.1f, 100.0f);
 
 		//Apply to the uniforms
 		int viewLoc = glGetUniformLocation(shaderProgram.programID, "view");
