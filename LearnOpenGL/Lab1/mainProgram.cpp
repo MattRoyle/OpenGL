@@ -138,10 +138,8 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		static const GLfloat bgd[] = { 1.f, 0.f, 0.f, 1.f };
-		glm::mat4 transform = glm::mat4(1.0f);
-		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-		transform = glm::rotate(transform, (float)glfwGetTime(),
-			glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		
 		//Input
 		processInput(window);
 
@@ -155,12 +153,24 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
 		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
+		
+		// first transform
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
-		glUseProgram(shaderProgram.programID);
+		
 		glBindVertexArray(VAOs[0]);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+		transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
+		float scaleValue = static_cast<float>(sin(glfwGetTime()));
+		transform = glm::scale(transform, glm::vec3(scaleValue, scaleValue, scaleValue));
+		
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram.programID, "transform"), 1, GL_FALSE, &transform[0][0]);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
 		glfwPollEvents(); //checks for inputs (mouse, keyboard)
