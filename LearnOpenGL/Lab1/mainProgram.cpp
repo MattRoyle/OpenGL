@@ -167,6 +167,8 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		
+
+		glUniform3fv(glGetUniformLocation(lightingShader.programID, "lightPos"), 1, &lightPos[0]);
 		//render the cube
 		glBindVertexArray(VAOs[0]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -194,6 +196,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
+
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
