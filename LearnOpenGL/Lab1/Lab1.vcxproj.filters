@@ -34,10 +34,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment.shader">
+    <None Include="colour.fs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="vertex.shader">
+    <None Include="colour.vs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="light.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="light.vs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

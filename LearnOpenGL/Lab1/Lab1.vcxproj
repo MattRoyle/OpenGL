@@ -144,8 +144,10 @@
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment.shader" />
-    <None Include="vertex.shader" />
+    <None Include="colour.fs" />
+    <None Include="colour.vs" />
+    <None Include="light.fs" />
+    <None Include="light.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

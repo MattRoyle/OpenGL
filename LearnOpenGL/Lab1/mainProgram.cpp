@@ -17,59 +17,58 @@
 #include "camera.h"
 
 GLfloat vertices[] = {
-	// positions			// texture coords
-	-0.5f, -0.5f, -0.5f,	 0.0f, 0.0f,
-	0.5f, -0.5f, -0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
-	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
-	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,
-	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
-	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 1.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 1.0f,
-	-0.5f, 0.5f, 0.5f,		0.0f, 1.0f,
-	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
-	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,		0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,		0.0f, 1.0f,
-	0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
-	0.5f, -0.5f, -0.5f,		1.0f, 1.0f,
-	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
-	0.5f, -0.5f, 0.5f,		1.0f, 0.0f,
-	-0.5f, -0.5f, 0.5f,		0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 1.0f,
-	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f,
-	0.5f, 0.5f, -0.5f,		1.0f, 1.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f,		1.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f,		0.0f, 0.0f,
-	-0.5f, 0.5f, -0.5f,		0.0f, 1.0f
+		// positions
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+
+		-0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f, -0.5f,
+		 0.5f, -0.5f,  0.5f,
+		 0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f, -0.5f,
+		 0.5f,  0.5f,  0.5f,
+		 0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
 };
 
-GLuint indices[] = {
-	0, 1, 3, // first triangle
-	1, 2, 3  // second triangle
-};
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 #define DISPLAY_W 640
 #define DISPLAY_H 480
 
-#define NUM_BUFFERS 1
-#define NUM_VAOS 1
+#define NUM_VBOS 1
+#define NUM_VAOS 2
 #define NUM_EBOS 1
-GLuint VBOs[NUM_BUFFERS];
-GLuint VAOs[NUM_VAOS];
-GLuint EBOs[NUM_EBOS];
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
@@ -77,13 +76,16 @@ void processInput(GLFWwindow* window);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // Scene Global Variables
+GLuint VBOs[NUM_VBOS];
+GLuint VAOs[NUM_VAOS];
+GLuint EBOs[NUM_EBOS];
+
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = DISPLAY_W/2, lastY = DISPLAY_H / 2; //position of the mouse on the previous update, intialised to the center
 bool firstMouse = true;
 
-GLfloat mixValue = 0.2f;
 
 int main()
 {
@@ -101,99 +103,36 @@ int main()
 	
 
 	// Create the program
-	ShaderProgram shaderProgram("vertex.shader", "fragment.shader");
+	ShaderProgram lightingShader("colour.vs", "colour.fs");
+	ShaderProgram cubeLightShader("light.vs", "light.fs");
+
 
 	// Set up vertex data and Buffers
-	glGenVertexArrays(NUM_VAOS, VAOs);
-	glGenBuffers(NUM_EBOS, VBOs);
-	glGenBuffers(NUM_EBOS, EBOs);
+	glGenVertexArrays(2, VAOs);
+	glGenBuffers(1, VBOs);
 
 	glBindVertexArray(VAOs[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOs[0]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	
 	//create the VAO (Vertex Attribute Object)
 	
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+		
+	glBindVertexArray(VAOs[1]);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	/*------Textures-----------*/
-	unsigned int texture1, texture2;
-	glGenTextures(1, &texture1);//number of textures to create
-	glBindTexture(GL_TEXTURE_2D, texture1);
-
-	//set the wrapping
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set the texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//load the image
-	int width, height, nrChannels;
-	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
-	//generate the texture
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "Failed to load texture1" << std::endl;
-		exit(1);
-	}
-	stbi_image_free(data);
-	data = nullptr;
-	glGenTextures(1, &texture2);//number of textures to create
-	glBindTexture(GL_TEXTURE_2D, texture2);
-
-	//set the wrapping
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set the texture filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA,
-			GL_UNSIGNED_BYTE, data);//alpha channel included
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "Failed to load texture2" << std::endl;
-		exit(1);
-	}
-	stbi_image_free(data);
-	glUseProgram(shaderProgram.programID);
 	glEnable(GL_DEPTH_TEST);
-	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(shaderProgram.programID, "texture2"), 1);
-	glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
+	
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f, 3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f, 2.0f, -2.5f),
-		glm::vec3(1.5f, 0.2f, -1.5f),
-		glm::vec3(-1.3f, 1.0f, -1.5f)
-	};
-
+	
+	int width, height;
 	static const GLfloat bgd[] = { 0.46f, 0.48f, 0.71f, 1.f };
 	/*Render loop*/
 	while (!glfwWindowShouldClose(window))
@@ -207,48 +146,42 @@ int main()
 		// Rendering
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 		glClear(GL_DEPTH_BUFFER_BIT);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-
-		glUniform1f(glGetUniformLocation(shaderProgram.programID, "mixValue"), mixValue);
 
 		// Coordinate Space Matrices
 		// Initialise as identity matrices
 
-		const float radius = 10.0f;
-		float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
-		glm::mat4 view = camera.GetViewMatrix();
+		glUseProgram(lightingShader.programID);
+		glUniform3f(glGetUniformLocation(lightingShader.programID, "objectColour"), 1.0f, 0.5f, 0.31f);
+		glUniform3f(glGetUniformLocation(lightingShader.programID, "lightColour"), 1.0f, 1.0f, 1.0f);
 
+		// view/projection transformations
 		glfwGetWindowSize(window, &width, &height);
-		glm::mat4 projection;
-		projection = glm::perspective(camera.fov,
-			(float)width / (float)height, 0.1f, 100.0f);
-
+		glm::mat4 projection = glm::perspective(camera.fov, (float)width / (float)height, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
 		//Apply to the uniforms
-		int viewLoc = glGetUniformLocation(shaderProgram.programID, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-		int projectionLoc = glGetUniformLocation(shaderProgram.programID, "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.programID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.programID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 		
-		//Drawing the triangles
+		//world transformations
+		glm::mat4 model = glm::mat4(1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		
+		//render the cube
 		glBindVertexArray(VAOs[0]);
-		for (unsigned int i = 0; i < 10; i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0 * i;
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle),
-				glm::vec3(0.5f, 1.0f, 0.0f));
-			int modelLoc = glGetUniformLocation(shaderProgram.programID, "model");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		
+		//Lamp Object
+		glUseProgram(cubeLightShader.programID);
+		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-		
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+		glBindVertexArray(VAOs[1]);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
 		glfwPollEvents(); //checks for inputs (mouse, keyboard)
@@ -293,19 +226,6 @@ void processInput(GLFWwindow* window)
 	else if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-		mixValue += 0.0001f;
-		if (mixValue >= 1.0f) {
-			mixValue = 1.0f;
-		}
-	}
-	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		mixValue -= 0.0001f;
-		if (mixValue <= 0.0f) {
-			mixValue = 0.0f;
-		}
-	}
-
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
