@@ -167,6 +167,8 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 		glUniformMatrix4fv(glGetUniformLocation(lightingShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		
+		glm::mat3 normalMatrix = glm::mat3(transpose(inverse(view * model)));
+		glUniformMatrix3fv(glGetUniformLocation(lightingShader.programID, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
 
 		glUniform3fv(glGetUniformLocation(lightingShader.programID, "lightPos"), 1, &lightPos[0]);
 		//render the cube
@@ -182,6 +184,8 @@ int main()
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
 		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		normalMatrix = glm::mat3(transpose(inverse(view * model)));
+		glUniformMatrix3fv(glGetUniformLocation(lightingShader.programID, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
 
 		glBindVertexArray(VAOs[1]);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -196,7 +200,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
-
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
