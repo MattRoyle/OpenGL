@@ -17,48 +17,43 @@
 #include "camera.h"
 
 GLfloat vertices[] = {
-		// positions
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f, -0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-
-		-0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f, -0.5f,
-		 0.5f, -0.5f,  0.5f,
-		 0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f,  0.5f,
-		-0.5f, -0.5f, -0.5f,
-
-		-0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f, -0.5f,
-		 0.5f,  0.5f,  0.5f,
-		 0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f,  0.5f,
-		-0.5f,  0.5f, -0.5f,
+	// positions			// normals				// texture coords
+	-0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 0.0f,	 0.0f,	
+	0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 1.0f,	 0.0f,	
+	0.5f,	 0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 1.0f,	 1.0f,	
+	0.5f,	 0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 1.0f,	 1.0f,	
+	-0.5f,	 0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 0.0f,	 1.0f,	
+	-0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 0.0f,	 -1.0f,	 0.0f,	 0.0f,	
+	-0.5f,	 -0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	 0.0f,	
+	0.5f,	 -0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 1.0f,	 0.0f,	
+	0.5f,	 0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 1.0f,	 1.0f,	
+	0.5f,	 0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 1.0f,	 1.0f,	
+	-0.5f,	 0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	 1.0f,	
+	-0.5f,	 -0.5f,	 0.5f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	 0.0f,	
+	-0.5f,	 0.5f,	 0.5f,	 -1.0f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	
+	-0.5f,	 0.5f,	 -0.5f,	 -1.0f,	 0.0f,	 0.0f,	 1.0f,	 1.0f,	
+	-0.5f,	 -0.5f,	 -0.5f,	 -1.0f,	 0.0f,	 0.0f,	 0.0f,	 1.0f,	
+	-0.5f,	 -0.5f,	 -0.5f,	 -1.0f,	 0.0f,	 0.0f,	 0.0f,	 1.0f,	
+	-0.5f,	 -0.5f,	 0.5f,	 -1.0f,	 0.0f,	 0.0f,	 0.0f,	 0.0f,	
+	-0.5f,	 0.5f,	 0.5f,	 -1.0f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	
+	0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	
+	0.5f,	 0.5f,	 -0.5f,	 1.0f,	 0.0f,	 0.0f,	 1.0f,	 1.0f,	
+	0.5f,	 -0.5f,	 -0.5f,	 1.0f,	 0.0f,	 0.0f,	 0.0f,	 1.0f,	
+	0.5f,	 -0.5f,	 -0.5f,	 1.0f,	 0.0f,	 0.0f,	 0.0f,	 1.0f,	
+	0.5f,	 -0.5f,	 0.5f,	 1.0f,	 0.0f,	 0.0f,	 0.0f,	 0.0f,	
+	0.5f,	 0.5f,	 0.5f,	 1.0f,	 0.0f,	 0.0f,	 1.0f,	 0.0f,	
+	-0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 -1.0f,	 0.0f,	 0.0f,	 1.0f,	
+	0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 -1.0f,	 0.0f,	 1.0f,	 1.0f,	
+	0.5f,	 -0.5f,	 0.5f,	 0.0f,	 -1.0f,	 0.0f,	 1.0f,	 0.0f,	
+	0.5f,	 -0.5f,	 0.5f,	 0.0f,	 -1.0f,	 0.0f,	 1.0f,	 0.0f,	
+	-0.5f,	 -0.5f,	 0.5f,	 0.0f,	 -1.0f,	 0.0f,	 0.0f,	 0.0f,	
+	-0.5f,	 -0.5f,	 -0.5f,	 0.0f,	 -1.0f,	 0.0f,	 0.0f,	 1.0f,	
+	-0.5f,	 0.5f,	 -0.5f,	 0.0f,	 1.0f,	 0.0f,	 0.0f,	 1.0f,	
+	0.5f,	 0.5f,	 -0.5f,	 0.0f,	 1.0f,	 0.0f,	 1.0f,	 1.0f,	
+	0.5f,	 0.5f,	 0.5f,	 0.0f,	 1.0f,	 0.0f,	 1.0f,	 0.0f,	
+	0.5f,	 0.5f,	 0.5f,	 0.0f,	 1.0f,	 0.0f,	 1.0f,	 0.0f,	
+	-0.5f,	 0.5f,	 0.5f,	 0.0f,	 1.0f,	 0.0f,	 0.0f,	 0.0f,	
+	-0.5f,	 0.5f,	 -0.5f,	 0.0f,	 1.0f,	 0.0f,	 0.0f,	 1.0f
 };
 
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
@@ -82,7 +77,7 @@ GLuint EBOs[NUM_EBOS];
 
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 1.0f, 6.0f));
 float lastX = DISPLAY_W/2, lastY = DISPLAY_H / 2; //position of the mouse on the previous update, intialised to the center
 bool firstMouse = true;
 
@@ -111,26 +106,34 @@ int main()
 	glGenVertexArrays(2, VAOs);
 	glGenBuffers(1, VBOs);
 
+	// Set up the cube
 	glBindVertexArray(VAOs[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	
-	//create the VAO (Vertex Attribute Object)
-	
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-		
-	glBindVertexArray(VAOs[1]);
+	// normal attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	// Set up the Light
+	glBindVertexArray(VAOs[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
 	
-
+	// Done outside the render loop as they dont change
+	glUseProgram(lightingShader.programID);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "objectColour"), 1.0f, 0.5f, 0.31f);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "lightColour"), 1.0f, 1.0f, 1.0f);
+	glUniform3fv(glGetUniformLocation(lightingShader.programID, "lightPos"), 1, &lightPos[0]);
+	
 	
 	int width, height;
 	static const GLfloat bgd[] = { 0.46f, 0.48f, 0.71f, 1.f };
@@ -151,9 +154,7 @@ int main()
 		// Initialise as identity matrices
 
 		glUseProgram(lightingShader.programID);
-		glUniform3f(glGetUniformLocation(lightingShader.programID, "objectColour"), 1.0f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(lightingShader.programID, "lightColour"), 1.0f, 1.0f, 1.0f);
-
+		glUniform3fv(glGetUniformLocation(lightingShader.programID, "viewPos"), 1, &camera.position[0]);
 		// view/projection transformations
 		glfwGetWindowSize(window, &width, &height);
 		glm::mat4 projection = glm::perspective(camera.fov, (float)width / (float)height, 0.1f, 100.0f);
