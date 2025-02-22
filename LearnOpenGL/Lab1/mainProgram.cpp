@@ -130,11 +130,19 @@ int main()
 	
 	// Done outside the render loop as they dont change
 	glUseProgram(lightingShader.programID);
-	glUniform3f(glGetUniformLocation(lightingShader.programID, "objectColour"), 1.0f, 0.5f, 0.31f);
-	glUniform3f(glGetUniformLocation(lightingShader.programID, "lightColour"), 1.0f, 1.0f, 1.0f);
-	glUniform3fv(glGetUniformLocation(lightingShader.programID, "lightPos"), 1, &lightPos[0]);
 	
 	
+	
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "material.ambient"), 1.0f, 0.5f, 0.31f);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "material.diffuse"), 1.0f, 0.5f, 0.31f);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "material.specular"), 0.5f, 0.5f, 0.5f);
+	glUniform1f(glGetUniformLocation(lightingShader.programID, "material.shininess"),32.0f);
+
+	glUniform3fv(glGetUniformLocation(lightingShader.programID, "light.position"), 1, &lightPos[0]);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.ambient"), 0.2f, 0.2f, 0.2f);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.diffuse"), 0.5f, 0.5f, 0.5f);
+	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.specular"), 1.0f, 1.0f, 1.0f);
+
 	int width, height;
 	static const GLfloat bgd[] = { 0.46f, 0.48f, 0.71f, 1.f };
 	/*Render loop*/
@@ -150,6 +158,14 @@ int main()
 		glClearBufferfv(GL_COLOR, 0, bgd); // clears the colour buffer writing the specified colour over the entire screen+
 		glClear(GL_DEPTH_BUFFER_BIT);
 
+		glm::vec3 lightColor;
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+		glUniform3fv(glGetUniformLocation(lightingShader.programID, "light.ambient"), 1, &ambientColor[0]);
+		glUniform3fv(glGetUniformLocation(lightingShader.programID, "light.diffuse"),1, &diffuseColor[0]);
 		// Coordinate Space Matrices
 		// Initialise as identity matrices
 
