@@ -153,10 +153,15 @@ int main()
 	glUniform1i(glGetUniformLocation(lightingShader.programID, "material.specular"), 1);
 	glUniform1f(glGetUniformLocation(lightingShader.programID, "material.shininess"),32.0f);
 
+	glUniform3fv(glGetUniformLocation(lightingShader.programID, "light.position"), 1, &lightPos[0]);
 	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.direction"),-0.2f, -1.0f, -0.3f);
 	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.ambient"), 0.2f, 0.2f, 0.2f);
 	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.diffuse"), 0.5f, 0.5f, 0.5f);
 	glUniform3f(glGetUniformLocation(lightingShader.programID, "light.specular"), 1.0f, 1.0f, 1.0f);
+
+	glUniform1f(glGetUniformLocation(lightingShader.programID, "light.constant"), 1.0f);
+	glUniform1f(glGetUniformLocation(lightingShader.programID, "light.linear"), 0.09f);
+	glUniform1f(glGetUniformLocation(lightingShader.programID, "light.quadratic"), 0.032f);
 	
 	unsigned int diffuseMap = loadTexture("textures/container2.png");
 	unsigned int specularMap = loadTexture("textures/container2_specular.png");
@@ -215,7 +220,7 @@ int main()
 		}
 		
 		//Lamp Object
-		/*glUseProgram(cubeLightShader.programID);
+		glUseProgram(cubeLightShader.programID);
 		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -225,7 +230,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(cubeLightShader.programID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
 		glBindVertexArray(VAOs[1]);
-		glDrawArrays(GL_TRIANGLES, 0, 36);*/
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		//swapping buffers and polling events
 		glfwSwapBuffers(window);// swap the new colour buffer
 		glfwPollEvents(); //checks for inputs (mouse, keyboard)
