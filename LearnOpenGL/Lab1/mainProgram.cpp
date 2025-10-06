@@ -98,7 +98,8 @@ int main()
 {
 	/*----------Window creation----------*/
 	glfwInit();
-
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);//set the version to one that supports compute shaders
 	GLFWwindow* window = glfwCreateWindow(DISPLAY_W, DISPLAY_H, "Learn OpenGL", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -110,8 +111,8 @@ int main()
 	
 
 	// Create the program
-	ShaderProgram lightingShader("colour.vs", "colour.fs");
-	ShaderProgram cubeLightShader("light.vs", "light.fs");
+	ShaderProgram lightingShader("colour.vert", "colour.frag");
+	ShaderProgram cubeLightShader("light.vert", "light.frag");
 
 
 	// Set up vertex data and Buffers

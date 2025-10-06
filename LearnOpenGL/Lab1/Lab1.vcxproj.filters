@@ -34,16 +34,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="colour.fs">
+    <None Include="colour.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="colour.vs">
+    <None Include="colour.vert">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="light.fs">
+    <None Include="light.frag">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="light.vs">
+    <None Include="light.vert">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
